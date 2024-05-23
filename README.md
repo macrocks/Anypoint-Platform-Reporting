@@ -1,5 +1,5 @@
 # Anypoint Platform Reporting
-Open source Project for reporting on Anypoint platform account. 
+Mule 4 Project for generating report on Anypoint platform account.
 
 This project will provide a way to export anypoint platform data in reporting format for runtime manager, api manager, anypoint queues and other platform components data.
 
