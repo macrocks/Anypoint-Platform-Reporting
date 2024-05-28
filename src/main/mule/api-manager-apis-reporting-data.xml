@@ -23,16 +23,16 @@ Authorization: "bearer " ++ vars.access_token
             
         </http:request>
 
-        <ee:transform doc:name="Transform Message" doc:id="ee208ca3-ceac-4212-a00c-3d6ab6764ffe" >
+        <!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="ee208ca3-ceac-4212-a00c-3d6ab6764ffe" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/xlsx header=true
----
+&#45;&#45;-
 {
   APIManagerReportingData: payload.assets
-}]]></ee:set-payload>
+}&#93;&#93;></ee:set-payload>
 			</ee:message>
-		</ee:transform>
+		</ee:transform> [STUDIO] -->
 		<logger doc:name="Logger" doc:id="725a058f-b1d6-474f-a45f-920e1fe43aa3" message="Exit: API manager Reporting Subflow Response Payload #[payload]" />
 
     </sub-flow>

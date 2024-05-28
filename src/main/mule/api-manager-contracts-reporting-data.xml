@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+  
+    <sub-flow name="GetAPIManagerInstancesContractsReportingData" doc:id="fb7d76eb-df6e-4fe7-86d2-8a6395fabdaf">
+        <logger doc:name="Logger" doc:id="702430bd-07f1-46b9-9842-31f7d3404592" message="Entry: API manager Contracts Reporting Subflow" level="INFO"/>
+        <foreach doc:name="Foreach" doc:id="9abb0cb4-3d71-40cc-96b2-c994cb4da1d4" collection="#[payload.assets]">
+            <logger level="INFO" message='API manager Instance name: #[vars.assetId]' doc:name="Logger" doc:id="98caaf85-4d56-4cf4-9518-385deb521fb8" />
+			<foreach doc:name="For Each" doc:id="a82e8370-87e9-401f-b4e2-9e0a1d7a6696" collection="#[payload.apis]">
+				<set-variable value="#[payload.id]" variableName="apiId" doc:name="Set variable" doc:id="2cd9a363-7dfa-484e-9c39-0fd7e9d17d04" />
+				<logger level="INFO" message="APi manager instance Id : #[vars.apiId]" doc:name="Logger" doc:id="03b8d47e-735d-4e22-9374-5fd4f92633ad" />
+				<http:request doc:name="call GET API manager instance Contracts API" config-ref="AnypointPlaformHttpConfig" path="/apimanager/api/v1/organizations/{organizationId}/environments/{environmentId}/apis/{apiId}/contracts" outputMimeType="application/json" method="GET">
+            <http:headers><![CDATA[#[output applicaton/java
+---
+ {
+Authorization: "bearer " ++ vars.access_token
+}]]]>
+            </http:headers>
+            <http:uri-params><![CDATA[#[output application/java
+---
+{
+	"environmentId" : vars.environmentId,
+	"organizationId" : vars.organizationId,
+	"apiId": vars.apiId
+}]]]></http:uri-params>
+            
+        </http:request>
+        
+				<logger doc:name="Logger" doc:id="6ed20fb6-73a7-40c2-9785-2487033d2313" message="Exit: API manager Contracts Reporting Subflow Response Payload #[payload]" level="INFO" />
+			</foreach> 
+        </foreach>
+		<logger level="INFO" doc:name="Logger1" doc:id="29575618-d2fb-4a03-8ccb-7046ff349f5f" message="Exit: API manager Contracts Reporting Subflow Response" />
+    
+
+</sub-flow>
+</mule>

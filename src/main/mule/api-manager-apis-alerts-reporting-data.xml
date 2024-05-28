@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+  
+    <sub-flow name="GetAPIManagerInstancesAlertsReportingData" doc:id="5c0a5f13-3db4-4aed-95d2-2fd73474a84f">
+        <logger doc:name="Logger" doc:id="522d2d84-8e45-4149-89ed-69561039c965" message="Entry: API manager Alerts Reporting Subflow" level="INFO"/>
+        <foreach doc:name="Foreach" doc:id="7052c459-f6ba-4d6c-ab23-c80730ac3d27" collection="#[payload.assets]">
+            <logger level="INFO" message='API manager Instance name: #[vars.assetId]' doc:name="Logger" doc:id="542ff273-cb70-4e8b-a6e7-c73553ed915e" />
+			<foreach doc:name="For Each" doc:id="5f99abb0-373d-40df-abd5-10b2dd3f9146" collection="#[payload.apis]">
+				<set-variable value="#[payload.id]" variableName="apiId" doc:name="Set variable" doc:id="27fc31a3-6840-4be6-ade7-a3935b8129b9" />
+				<logger level="INFO" message="APi manager instance Id : #[vars.apiId]" doc:name="Logger" doc:id="0ab053bc-a3c8-4e62-99a3-5f4a476d9a65" />
+				<http:request doc:name="call GET API manager instance Alerts API" config-ref="AnypointPlaformHttpConfig" path="/apimanager/api/v1/organizations/{organizationId}/environments/{environmentId}/apis/{apiId}/alerts" outputMimeType="application/json" method="GET">
+            <http:headers><![CDATA[#[output applicaton/java
+---
+ {
+Authorization: "bearer " ++ vars.access_token
+}]]]>
+            </http:headers>
+            <http:uri-params><![CDATA[#[output application/java
+---
+{
+	"environmentId" : vars.environmentId,
+	"organizationId" : vars.organizationId,
+	"apiId": vars.apiId
+}]]]></http:uri-params>
+            
+        </http:request>
+        
+				<logger doc:name="Logger" doc:id="c81aacb0-439d-4e09-a499-652943741fcb" message="Exit: API manager Alerts Reporting Subflow Response Payload #[payload]" level="INFO" />
+			</foreach> 
+        </foreach>
+		<logger level="INFO" doc:name="Logger1" doc:id="8f3dd4cc-8855-48d7-bbec-33ad8f4c2065" message="Exit: API manager Alerts Reporting Subflow Response" />
+    
+
+</sub-flow>
+</mule>
