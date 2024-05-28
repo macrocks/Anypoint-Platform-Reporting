@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://www.mulesoft.org/schema/mule/http" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+    <sub-flow name="GetRuntimeManagerAlertsReportingData" doc:id="4c8e627a-79d1-4a22-88cf-e22d476e989e">
+        <logger doc:name="Logger" doc:id="94dfe74c-134f-45f1-98ff-7035e4c993e9" message="Entry: Runtime Manager Alerts Subflow" />
+
+        <http:request doc:name="call GET Runtime Manager Alerts data" config-ref="AnypointPlaformHttpConfig" path="/armui/api/v1/alerts" outputMimeType="application/json" method="GET">
+            <http:headers><![CDATA[#[output applicaton/java
+---
+ {
+Authorization: "bearer " ++ vars.access_token,
+"X-ANYPNT-ENV-ID" : vars.environmentId,
+"X-ANYPNT-ORG-ID" : vars.organizationId
+}]]]>
+            </http:headers>    
+        </http:request>
+
+        <!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="8b32f5d6-9237-4c2f-990e-6926719a662f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xlsx header=true
+&#45;&#45;-
+{
+  APIManagerReportingData: payload.assets
+}&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform> [STUDIO] -->
+		<logger doc:name="Logger" doc:id="49a529a2-1470-4b8a-a61e-d1a35b1777a1" message="Exit: Runtime Manager Alerts Subflow Response Payload #[payload]" />
+
+    </sub-flow>
+</mule>

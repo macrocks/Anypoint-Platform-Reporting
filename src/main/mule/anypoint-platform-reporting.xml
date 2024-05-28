@@ -31,9 +31,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			value="#[output application/java --- { environmentId: 'e197c34b-fdaf-44b8-afb4-0f01416d0aeb', organizationId: '50e7f660-44c6-4b10-a607-589ade6e2996' }]" />
 
 		<flow-ref name="LoginToAnypointUsingConnectedApp" doc:name="LoginToAnypointUsingConnectedApp Flow Reference"/>
-		<flow-ref doc:name="GetRuntimeManagerInstancesData Flow Reference" doc:id="3bb804dc-2e8f-41ac-ba2b-dc7dead8ab63" name="GetRuntimeManagerInstancesData"/>
-		<flow-ref doc:name="GetAPIManagerInstancesData Flow Reference" doc:id="270d56eb-a25c-4879-93b9-1a703e15f26c" name="GetAPIManagerInstancesData"/>
+		<!-- [STUDIO:"GetRuntimeManagerInstancesData Flow Reference"]<flow-ref doc:name="GetRuntimeManagerInstancesData Flow Reference" doc:id="3bb804dc-2e8f-41ac-ba2b-dc7dead8ab63" name="GetRuntimeManagerInstancesData"/> [STUDIO] -->
+		<!-- [STUDIO:"GetAPIManagerInstancesData Flow Reference"]<flow-ref doc:name="GetAPIManagerInstancesData Flow Reference" doc:id="270d56eb-a25c-4879-93b9-1a703e15f26c" name="GetAPIManagerInstancesData"/> [STUDIO] -->
 		<!-- [STUDIO:"GetAPIManagerInstancesPoliciesData Flow Reference"]<flow-ref doc:name="GetAPIManagerInstancesPoliciesData Flow Reference" doc:id="da79f93d-e30c-4c57-934d-3ad0090de7d7" name="GetAPIManagerInstancesPoliciesData"/> [STUDIO] -->
+		<!-- [STUDIO:"GetAPIManagerInstanceAlertsReportingData Flow Reference"]<flow-ref doc:name="GetAPIManagerInstanceAlertsReportingData Flow Reference" doc:id="c760ca60-b7be-434f-8ca9-71639fee92e7" name="GetAPIManagerInstancesAlertsReportingData"/> [STUDIO] -->
+		<!-- [STUDIO:"GetAPiManagerContractsReportingData Flow Reference"]<flow-ref doc:name="GetAPiManagerContractsReportingData Flow Reference" doc:id="660642e3-837c-4c6a-8497-ee5d15d9ebdc" name="GetAPIManagerInstancesContractsReportingData"/> [STUDIO] -->
+		<flow-ref doc:name="Get Runtime Manager Alerts Reporting Data Flow Reference" doc:id="7a3d4d1c-db1e-46a1-b1b9-38d0ddf2997c" name="GetRuntimeManagerAlertsReportingData"/>
 		<flow-ref doc:name="write-output-to-csv-fileSub_Flow Flow Reference" doc:id="f9a66f37-3f58-42a7-97c1-49d88db37d33" name="write-output-to-csv-fileSub_Flow"/>
 		<logger level="INFO" doc:name="Scheduler Exit Logger"
 			doc:id="7a762be1-4d80-4dae-9e32-70a4a6d04850"
