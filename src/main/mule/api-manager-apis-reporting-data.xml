@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://www.mulesoft.org/schema/mule/http" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+    <sub-flow name="GetAPIManagerInstancesData" doc:id="a0e1ff69-c30c-4c45-bbdb-52fd8e979502">
+        <logger doc:name="Logger" doc:id="38837b03-3222-4b07-b1f0-c50c0798d10b" message="Entry: API manager Reporting Subflow" />
+
+        <http:request doc:name="call GET API manager instances data" config-ref="AnypointPlaformHttpConfig" path="/apimanager/api/v1/organizations/{organizationId}/environments/{environmentId}/apis" outputMimeType="application/json" method="GET">
+            <http:headers><![CDATA[#[output applicaton/java
+---
+ {
+Authorization: "bearer " ++ vars.access_token
+}]]]>
+            </http:headers>
+            <http:uri-params><![CDATA[#[output application/java
+---
+{
+	"environmentId" : vars.environmentId,
+	"organizationId" : vars.organizationId
+}]]]></http:uri-params>
+        
+            
+        </http:request>
+
+        <ee:transform doc:name="Transform Message" doc:id="ee208ca3-ceac-4212-a00c-3d6ab6764ffe" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xlsx header=true
+---
+{
+  APIManagerReportingData: payload.assets
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger doc:name="Logger" doc:id="725a058f-b1d6-474f-a45f-920e1fe43aa3" message="Exit: API manager Reporting Subflow Response Payload #[payload]" />
+
+    </sub-flow>
+</mule>

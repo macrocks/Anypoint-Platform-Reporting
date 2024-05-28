@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="anypoint-platform-reportingFlow"
+		doc:id="e0b3b585-e38e-45b9-867a-3a74448567c1">
+		<scheduler doc:name="Scheduler"
+			doc:id="5116136b-f096-4195-9697-8b07a5b3e8db">
+			<scheduling-strategy>
+				<fixed-frequency frequency="20" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Scheduler Start Logger"
+			doc:id="6083ffda-40e9-44ef-be5a-dc334be3157c"
+			message="Scheduler Start Logger" />
+		<set-variable
+			value='e197c34b-fdaf-44b8-afb4-0f01416d0aeb'
+			variableName="environmentId" doc:name="Set environmentId variable"
+			doc:id="1c9210a0-9574-4730-a2ce-8673a1e85293" />
+		<set-variable
+			value='50e7f660-44c6-4b10-a607-589ade6e2996'
+			variableName="organizationId" doc:name="Set variable"
+			doc:id="86344a56-4977-487b-ba15-764a092978ff" />
+		<set-variable variableName="commonHeader"
+			value="#[output application/java --- { environmentId: 'e197c34b-fdaf-44b8-afb4-0f01416d0aeb', organizationId: '50e7f660-44c6-4b10-a607-589ade6e2996' }]" />
+
+		<flow-ref name="LoginToAnypointUsingConnectedApp" doc:name="LoginToAnypointUsingConnectedApp Flow Reference"/>
+		<flow-ref doc:name="GetRuntimeManagerInstancesData Flow Reference" doc:id="3bb804dc-2e8f-41ac-ba2b-dc7dead8ab63" name="GetRuntimeManagerInstancesData"/>
+		<flow-ref doc:name="GetAPIManagerInstancesData Flow Reference" doc:id="270d56eb-a25c-4879-93b9-1a703e15f26c" name="GetAPIManagerInstancesData"/>
+		<!-- [STUDIO:"GetAPIManagerInstancesPoliciesData Flow Reference"]<flow-ref doc:name="GetAPIManagerInstancesPoliciesData Flow Reference" doc:id="da79f93d-e30c-4c57-934d-3ad0090de7d7" name="GetAPIManagerInstancesPoliciesData"/> [STUDIO] -->
+		<flow-ref doc:name="write-output-to-csv-fileSub_Flow Flow Reference" doc:id="f9a66f37-3f58-42a7-97c1-49d88db37d33" name="write-output-to-csv-fileSub_Flow"/>
+		<logger level="INFO" doc:name="Scheduler Exit Logger"
+			doc:id="7a762be1-4d80-4dae-9e32-70a4a6d04850"
+			message="Scheduler Exit Logger" />
+
+	</flow>
+	<http:request-config name="AnypointPlaformHttpConfig">
+		<http:request-connection protocol="HTTPS"
+			host="anypoint.mulesoft.com" port="443" />
+	</http:request-config>
+	<sub-flow name="LoginToAnypointUsingConnectedApp">
+		<logger level="INFO"
+			message='Entry: anypoint platform login subflow' doc:name="Logger"
+			doc:id="7b6043fb-598d-44eb-9eb0-594d20b5be85" />
+		<ee:transform
+			doc:name="Set Payload for Oauth/otken endpoint"
+			doc:id="d5ea82e5-9df5-4d69-aced-cc080c1379de">
+			<ee:message>
+				<ee:set-payload doc:name="Set payload"
+					doc:id="efcd15a2-884e-4e30-90cc-87251d4d99d1"><![CDATA[%dw 2.0
+        output application/json
+        ---
+        {
+            "client_id" : "1a3a105396844a749632b13d6f266210",
+            "client_secret" : "4032A05ad74E434794cEEa2233b42a9c",
+            "grant_type"    : "client_credentials"
+        }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+
+
+		<http:request doc:name="call GET oAuth2/token"
+			method="POST" config-ref="AnypointPlaformHttpConfig"
+			path="/accounts/api/v2/oauth2/token" outputMimeType="application/json"
+			targetValue="#[payload.access_token]" target="access_token" />
+		<logger doc:name="Logger"
+			doc:id="035f97c6-1799-4e61-a1bf-ef7f67661f2f"
+			message="After: Response from Anypoint Authorization call -access token = #[vars.access_token]" />
+
+
+	</sub-flow>
+</mule>

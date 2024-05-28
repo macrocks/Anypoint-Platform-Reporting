@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="a8339037-f1b5-4652-bd90-2eff20ce2ebd" >
+	</file:config>
+	<sub-flow name="write-output-to-csv-fileSub_Flow" doc:id="7b2b47ec-234c-45cb-8791-808e8447d9f8" >
+		<logger level="INFO" doc:name="Output Write Entry Logger" doc:id="2e3c3167-ad8c-4aeb-8e2a-d22caf146e46" message="Entry: write-output-to-csvfile"/>
+		<file:write doc:name="Write" doc:id="ecd5e5d2-177f-42c4-bb92-4dd5ce73fbe7" config-ref="File_Config" path="C:\Users\ghorp\Downloads\csvoutput\anypoint-reporting-output.xlsx"/>
+		<logger level="INFO" doc:name="Output Write Exit Logger" doc:id="45c91770-6620-4d87-b1ec-e446022c7b24" message="Exit: write-output-to-csvfile"/>
+	</sub-flow>
+</mule>

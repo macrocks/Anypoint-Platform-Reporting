@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+  
+    <sub-flow name="GetRuntimeManagerInstancesData" doc:id="5228ed43-32c9-4985-a431-de6feb2b7202">
+        <logger doc:name="Logger" doc:id="78558560-8287-4492-bb7e-347c071feaa0" message="Entry: Runtime manager Reporting Subflow"/>
+      
+      <http:request doc:name="call GET runtime manager instances data" config-ref="AnypointPlaformHttpConfig" path="/cloudhub/api/v2/applications" outputMimeType="application/json">
+        <http:headers>
+            <![CDATA[#[output applicaton/java
+---
+ {
+Authorization: "bearer " ++ vars.access_token,
+organizationId: vars.organizationId,
+environmentId: vars.environmentId
+}]]]>
+            </http:headers>
+        </http:request>
+      
+        <logger doc:name="Logger" doc:id="823780f8-ea6b-4024-8a7c-100771f283da" message="Exit: Runtime manager Reporting Subflow Response Payload #[payload]"/>
+    
+</sub-flow>
+</mule>

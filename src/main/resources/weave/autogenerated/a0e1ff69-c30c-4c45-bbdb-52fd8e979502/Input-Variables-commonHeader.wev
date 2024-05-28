@@ -1,0 +1,7 @@
+%dw 2.0
+
+type auto_a0e1ff69_c30c_4c45_bbdb_52fd8e979502_Input_Variables_commonHeader = {|
+  environmentId: String, 
+  organizationId: String
+|}
+
